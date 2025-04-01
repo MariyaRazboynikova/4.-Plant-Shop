@@ -15,18 +15,48 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  String searchQuery = '';
-
+  String selectedCategory = 'All plants';
   @override
   Widget build(BuildContext context) {
     final products = context.watch<PlantRepository>().plantsShop;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: _buildAppBar(context),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Center(
+          child: Text(
+            'Plant Shop Page',
+            style: GoogleFonts.taiHeritagePro(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 30,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/cart_page'),
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.secondary,
+            size: 30,
+          ),
+        ),
+      ),
       body: Column(
         children: [
-          _buildSearchField(),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -43,73 +73,25 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: Center(
-        child: Text(
-          'Plant Shop Page',
-          style: GoogleFonts.taiHeritagePro(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: 30,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-      ),
-      actions: [
-        IconButton(
-          onPressed: () => Navigator.pushNamed(context, '/cart_page'),
-          icon: Icon(
-            Icons.shopping_cart_outlined,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-      ],
-      leading: IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: Icon(
-          Icons.arrow_back,
-          color: Theme.of(context).colorScheme.secondary,
-          size: 30,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: TextField(
-        onChanged: (value) {
-          setState(() {
-            searchQuery = value.toLowerCase();
-          });
-        },
-        decoration: const InputDecoration(
-          hintText: 'Поиск по названию растения...',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildCategoryList() {
     return SizedBox(
-      height: 70,
+      height: 60,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(5),
-        children: [
-          CategoryTile(text: 'All plants'),
-          CategoryTile(text: 'Indoors'),
-          CategoryTile(text: 'OutDoors'),
-          CategoryTile(text: 'Organic'),
-        ],
+        children: ['All plants', 'Indoors', 'OutDoors'].map((category) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedCategory = category;
+              });
+            },
+            child: CategoryTile(
+              text: category,
+              isSelected: selectedCategory == category,
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -193,21 +175,3 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 }
-
-// Widget _buildCategoryTile(String text) {
-//   return Container(
-//     margin: const EdgeInsets.all(10),
-//     padding: const EdgeInsets.symmetric(horizontal: 5),
-//     decoration: BoxDecoration(
-//       borderRadius: BorderRadius.circular(10),
-//     ),
-//     child: Text(
-//       text,
-//       style: GoogleFonts.taiHeritagePro(
-//         color: Theme.of(context).colorScheme.secondary,
-//         fontSize: 20,
-//         fontWeight: FontWeight.w300,
-//       ),
-//     ),
-//   );
-// }

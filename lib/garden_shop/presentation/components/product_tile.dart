@@ -65,7 +65,7 @@ class ProductTile extends StatelessWidget {
           SizedBox(
             // height: 30, // Ограничение высоты для описания
             child: Text(
-              productModel.description,
+              productModel.category,
               style: GoogleFonts.taiHeritagePro(
                 color: Theme.of(context).colorScheme.secondary,
                 fontSize: 15,
