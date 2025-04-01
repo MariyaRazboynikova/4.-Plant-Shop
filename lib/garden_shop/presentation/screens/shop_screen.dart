@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/data/models/product_model.dart';
-import 'package:lesoon1/garden_shop/data/models/shop_model.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
 import 'package:lesoon1/garden_shop/presentation/components/category_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/components/product_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/popular_product_card.dart';

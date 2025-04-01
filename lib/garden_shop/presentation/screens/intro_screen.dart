@@ -67,7 +67,7 @@ class MainShapeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double width = constraints.maxWidth * 0.8; // Занимает 80% ширины экрана
+        double width = constraints.maxWidth * 0.8;
         return Stack(
           children: [
             Container(
@@ -81,7 +81,7 @@ class MainShapeWidget extends StatelessWidget {
               ),
             ),
             Container(
-              width: width * 1.1, // Немного шире, чтобы создать эффект границы
+              width: width * 1.1,
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(

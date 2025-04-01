@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lesoon1/garden_shop/data/models/shop_model.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/all_product.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/cart_screen.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/intro_screen.dart';
