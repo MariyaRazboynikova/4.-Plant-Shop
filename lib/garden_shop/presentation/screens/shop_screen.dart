@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:lesoon1/garden_shop/data/models/product_model.dart';
 import 'package:lesoon1/garden_shop/data/models/shop_model.dart';
 import 'package:lesoon1/garden_shop/presentation/components/category_tile.dart';
@@ -20,7 +19,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final products = context.watch<ShopModel>().plantsShop;
+    final products = context.watch<PlantRepository>().plantsShop;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -119,7 +118,7 @@ class _ShopScreenState extends State<ShopScreen> {
     return SizedBox(
       height: 310,
       child: ListView.builder(
-        itemCount: products.length,
+        itemCount: 4,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(5),
         itemBuilder: (context, index) {
@@ -133,18 +132,34 @@ class _ShopScreenState extends State<ShopScreen> {
   Widget _buildSeeMoreButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, '/all_product');
           },
-          child: Text(
-            'See More',
-            style: GoogleFonts.taiHeritagePro(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 25,
-              fontWeight: FontWeight.w300,
-            ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              RotationTransition(
+                turns: AlwaysStoppedAnimation(45 / 360),
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              Text(
+                'See More',
+                style: GoogleFonts.taiHeritagePro(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ],
           ),
         ),
       ],

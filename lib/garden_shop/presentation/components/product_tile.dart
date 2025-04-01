@@ -22,7 +22,7 @@ class ProductTile extends StatelessWidget {
           ),
           MaterialButton(
             onPressed: () {
-              context.read<ShopModel>().addItemToCart(productModel);
+              context.read<PlantRepository>().addItemToCart(productModel);
               Navigator.pop(context);
             },
             child: const Text('Добавить'),

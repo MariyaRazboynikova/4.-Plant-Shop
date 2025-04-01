@@ -12,7 +12,7 @@ void main() {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider<ThemesProvider>(create: (_) => ThemesProvider()),
-      ChangeNotifierProvider<ShopModel>(create: (_) => ShopModel()),
+      ChangeNotifierProvider<PlantRepository>(create: (_) => PlantRepository()),
     ], child: MainApp()),
   );
 }
@@ -30,7 +30,7 @@ class MainApp extends StatelessWidget {
         '/intro_screen': (context) => IntroScreen(),
         '/shop_screen': (context) => const ShopScreen(),
         '/all_product': (context) => AllProduct(),
-        '/selected_plant_screen': (context) => const SelectedPlantScreen(),
+        '/selected_plant_screen': (context) => SelectedPlantScreen(),
         '/cart_screen': (context) => const CartScreen(),
       },
     );
