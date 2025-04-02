@@ -79,7 +79,7 @@ class _ShopScreenState extends State<ShopScreen> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(5),
-        children: ['All plants', 'Indoors', 'OutDoors'].map((category) {
+        children: ['All plants', 'Indoor', 'Outdoor'].map((category) {
           return GestureDetector(
             onTap: () {
               setState(() {
@@ -97,6 +97,12 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _buildProductList(List<ProductModel> products) {
+    final filteredProducts = selectedCategory == 'All plants'
+        ? products
+        : products
+            .where((product) => product.category == selectedCategory)
+            .toList();
+
     return SizedBox(
       height: 310,
       child: ListView.builder(
@@ -104,7 +110,7 @@ class _ShopScreenState extends State<ShopScreen> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(5),
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = filteredProducts[index];
           return ProductTile(productModel: product);
         },
       ),

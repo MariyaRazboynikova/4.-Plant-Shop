@@ -1,4 +1,3 @@
-// data/plant_repository.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/data/models/product_model.dart';
@@ -14,6 +13,7 @@ class AllProduct extends StatefulWidget {
 
 class _AllProductState extends State<AllProduct> {
   String selectedCategory = 'All plants';
+  String searchQuery = '';
 
   List<ProductModel> getFilteredProducts(List<ProductModel> products) {
     return products.where((product) {
@@ -23,9 +23,6 @@ class _AllProductState extends State<AllProduct> {
       return matchesCategory && matchesSearch;
     }).toList();
   }
-
-  final PlantRepository repository = PlantRepository();
-  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -77,28 +74,49 @@ class _AllProductState extends State<AllProduct> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.all(5),
-              children: [
-                CategoryTile(text: 'All plants'),
-                CategoryTile(text: 'Indoors'),
-                CategoryTile(text: 'OutDoors'),
-              ],
+              children: ['All plants', 'Indoor', 'Outdoor'].map((category) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = category;
+                    });
+                  },
+                  child: CategoryTile(
+                    text: category,
+                    isSelected: selectedCategory == category,
+                  ),
+                );
+              }).toList(),
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.6,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 5,
-              ),
-              itemCount: filteredProducts.length,
-              padding: const EdgeInsets.all(5),
-              itemBuilder: (context, index) {
-                final product = filteredProducts[index];
-                return ProductTile(productModel: product);
-              },
-            ),
+            child: filteredProducts.isEmpty
+                ? Center(
+                    child: Text(
+                      "Нет подходящих растений",
+                      style: GoogleFonts.taiHeritagePro(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  )
+                : GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.6,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 5,
+                    ),
+                    itemCount: filteredProducts.length,
+                    padding: const EdgeInsets.all(5),
+                    itemBuilder: (context, index) {
+                      final product = filteredProducts[index];
+                      return ProductTile(
+                        productModel: product,
+                      );
+                    },
+                  ),
           ),
         ],
       ),
