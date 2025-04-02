@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lesoon1/garden_shop/data/models/product_model.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/all_product.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/cart_screen.dart';
@@ -30,7 +31,11 @@ class MainApp extends StatelessWidget {
         '/intro_screen': (context) => IntroScreen(),
         '/shop_screen': (context) => const ShopScreen(),
         '/all_product': (context) => AllProduct(),
-        '/selected_plant_screen': (context) => SelectedPlantScreen(),
+        '/selected_plant_screen': (context) {
+          final args =
+              ModalRoute.of(context)!.settings.arguments as ProductModel;
+          return SelectedPlantScreen(product: args);
+        },
         '/cart_screen': (context) => const CartScreen(),
       },
     );

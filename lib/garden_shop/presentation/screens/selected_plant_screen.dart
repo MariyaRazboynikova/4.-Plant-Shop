@@ -1,6 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lesoon1/garden_shop/presentation/components/button.dart';
+import 'package:lesoon1/garden_shop/data/models/product_model.dart';
+import 'package:provider/provider.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
 
-class SelectedPlantScreen extends StatelessWidget {
+class SelectedPlantScreen extends StatefulWidget {
+  final ProductModel product;
+
+  const SelectedPlantScreen({super.key, required this.product});
+
+  @override
+  State<SelectedPlantScreen> createState() => _SelectedPlantScreenState();
+}
+
+class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
+  int quantity = 1; // Начальное количество
+
+  void addToCart() {
+    final cartItem = List.generate(quantity, (_) => widget.product);
+    context.read<PlantRepository>().addMultipleItemsToCart(cartItem);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content:
+              Text('${widget.product.name} x$quantity добавлено в корзину!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,14 +36,11 @@ class SelectedPlantScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Center(
-              child: Image.asset(
-                'lib/assets/Rubber_Tree.jpeg',
-                height: 150,
-              ),
+              child: Image.asset(widget.product.imagePath, height: 150),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -27,46 +51,46 @@ class SelectedPlantScreen extends StatelessWidget {
                     icon: Icons.thermostat, value: '19-25°C', label: 'Temp'),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
-              'Monstera',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              widget.product.name,
+              style: GoogleFonts.taiHeritagePro(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 30,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              'Monstera are species of evergreen tropical vines and shrubs that are native to Central America.',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              'The Monstera, often called the Swiss Cheese Plant, is an eye-catching tropical beauty. With its large, glossy leaves featuring unique perforations, it adds a touch of exotic charm to any space. Ideal for indoor environments, this low-maintenance plant thrives in bright, indirect light. Its lush foliage not only purifies the air but also enhances your home decor. Perfect for plant lovers and beginners alike!',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Similar Flowers',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListTile(
-              leading: Image.asset('lib/assets/Rubber_Tree.jpeg'),
-              title: Text('Dracaena'),
-              subtitle: Text('This particular plant produces a red gum...'),
-              trailing: Text('\$120'),
-            ),
-            Spacer(),
+            const Spacer(),
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.remove_circle_outline),
-                  onPressed: () {},
+                  icon: const Icon(Icons.remove_circle_outline),
+                  onPressed: () {
+                    if (quantity > 1) {
+                      setState(() {
+                        quantity--;
+                      });
+                    }
+                  },
                 ),
-                Text('1', style: TextStyle(fontSize: 18)),
+                Text('$quantity', style: const TextStyle(fontSize: 18)),
                 IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {},
+                  icon: const Icon(Icons.add_circle_outline),
+                  onPressed: () {
+                    setState(() {
+                      quantity++;
+                    });
+                  },
                 ),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Buy Now'),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  ),
+                const Spacer(),
+                Button(
+                  text: 'Добавить в корзину',
+                  onTap: addToCart,
                 ),
               ],
             ),
@@ -82,16 +106,20 @@ class InfoCard extends StatelessWidget {
   final String value;
   final String label;
 
-  InfoCard({required this.icon, required this.value, required this.label});
+  const InfoCard(
+      {super.key,
+      required this.icon,
+      required this.value,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Icon(icon, size: 30, color: Colors.green),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
       ],
     );

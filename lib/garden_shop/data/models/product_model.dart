@@ -3,11 +3,13 @@ class ProductModel {
   final int price;
   final String category;
   final String imagePath;
+  final String description;
 
   ProductModel({
     required this.name,
     required this.price,
     required this.category,
     required this.imagePath,
+    required this.description,
   });
 }

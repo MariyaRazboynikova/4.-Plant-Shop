@@ -155,28 +155,31 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _buildPopularProductSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Most Popular',
-              style: GoogleFonts.taiHeritagePro(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/selected_plant_screen'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Most Popular',
+                style: GoogleFonts.taiHeritagePro(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          PopularProductCard(
-            imagePath: 'lib/assets/Rubber_Tree.jpeg',
-            title: 'Rubber Tree',
-            description: 'Rubber Tree is a nice outdoor plants...',
-          ),
-        ],
+            PopularProductCard(
+              imagePath: 'lib/assets/Rubber_Tree.jpeg',
+              title: 'Rubber Tree',
+              description: 'Rubber Tree is a nice outdoor plants...',
+            ),
+          ],
+        ),
       ),
     );
   }
