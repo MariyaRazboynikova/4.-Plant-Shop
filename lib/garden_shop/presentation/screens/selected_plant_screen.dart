@@ -15,7 +15,7 @@ class SelectedPlantScreen extends StatefulWidget {
 }
 
 class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
-  int quantity = 1; // Начальное количество
+  int quantity = 1;
 
   void addToCart() {
     final cartItem = List.generate(quantity, (_) => widget.product);
@@ -23,8 +23,8 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content:
-              Text('${widget.product.name} x$quantity добавлено в корзину!')),
+        content: Text('${widget.product.name} x$quantity добавлено в корзину!'),
+      ),
     );
   }
 
@@ -62,7 +62,7 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'The Monstera, often called the Swiss Cheese Plant, is an eye-catching tropical beauty. With its large, glossy leaves featuring unique perforations, it adds a touch of exotic charm to any space. Ideal for indoor environments, this low-maintenance plant thrives in bright, indirect light. Its lush foliage not only purifies the air but also enhances your home decor. Perfect for plant lovers and beginners alike!',
+              widget.product.description,
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const Spacer(),
