@@ -9,26 +9,8 @@ class ProductTile extends StatelessWidget {
   final Product product;
   const ProductTile({super.key, required this.product});
 
-  void addItemToCart(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: const Text('Добавить этот товар в корзину?'),
-        actions: [
-          MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
-          MaterialButton(
-            onPressed: () {
-              context.read<PlantRepositoryImpl>().addItemToCart(product);
-              Navigator.pop(context);
-            },
-            child: const Text('Добавить'),
-          ),
-        ],
-      ),
-    );
+  void addItemToCart(BuildContext context, int quantity) {
+    context.read<PlantRepositoryImpl>().addItemToCart(product, quantity);
   }
 
   @override
@@ -44,18 +26,19 @@ class ProductTile extends StatelessWidget {
       },
       child: Container(
         width: 200,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        padding: const EdgeInsets.all(10),
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(5),
+              padding: EdgeInsets.all(5),
               child: Image.asset(product.imagePath, height: 150),
             ),
             Text(
@@ -66,14 +49,16 @@ class ProductTile extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text(
-              product.category,
-              style: GoogleFonts.taiHeritagePro(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 15,
+            SizedBox(
+              child: Text(
+                product.category,
+                style: GoogleFonts.taiHeritagePro(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 15,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +77,7 @@ class ProductTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () => addItemToCart(context),
+                    onPressed: () => addItemToCart(context, 1),
                     icon: Icon(
                       Icons.add,
                       color: Theme.of(context).colorScheme.surface,
