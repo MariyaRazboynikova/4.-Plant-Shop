@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lesoon1/garden_shop/data/models/product_model.dart';
-import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/selected_plant_screen.dart';
 import 'package:provider/provider.dart';
 
 class ProductTile extends StatelessWidget {
-  final ProductModel productModel;
-  const ProductTile({super.key, required this.productModel});
+  final Product product;
+  const ProductTile({super.key, required this.product});
 
   void addItemToCart(BuildContext context) {
     showDialog(
@@ -16,14 +16,12 @@ class ProductTile extends StatelessWidget {
         content: const Text('Добавить этот товар в корзину?'),
         actions: [
           MaterialButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             child: const Text('Закрыть'),
           ),
           MaterialButton(
             onPressed: () {
-              context.read<PlantRepository>().addItemToCart(productModel);
+              context.read<PlantRepositoryImpl>().addItemToCart(product);
               Navigator.pop(context);
             },
             child: const Text('Добавить'),
@@ -40,51 +38,48 @@ class ProductTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SelectedPlantScreen(product: productModel),
+            builder: (context) => SelectedPlantScreen(product: product),
           ),
         );
       },
       child: Container(
         width: 200,
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(5),
-              child: Image.asset(productModel.imagePath, height: 150),
+              padding: const EdgeInsets.all(5),
+              child: Image.asset(product.imagePath, height: 150),
             ),
             Text(
-              productModel.name,
+              product.name,
               style: GoogleFonts.taiHeritagePro(
                 color: Theme.of(context).colorScheme.secondary,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(
-              child: Text(
-                productModel.category,
-                style: GoogleFonts.taiHeritagePro(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 15,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            Text(
+              product.category,
+              style: GoogleFonts.taiHeritagePro(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 15,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\$${productModel.price.toStringAsFixed(2)}',
+                  '\$${product.price.toStringAsFixed(2)}',
                   style: GoogleFonts.taiHeritagePro(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 20,

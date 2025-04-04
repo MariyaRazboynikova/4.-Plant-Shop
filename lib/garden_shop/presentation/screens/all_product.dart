@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lesoon1/garden_shop/data/models/product_model.dart';
-import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
-import 'package:lesoon1/garden_shop/presentation/components/category_tile.dart';
-import 'package:lesoon1/garden_shop/presentation/components/product_tile.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
 import 'package:provider/provider.dart';
 
 class AllProduct extends StatefulWidget {
@@ -15,7 +15,7 @@ class _AllProductState extends State<AllProduct> {
   String selectedCategory = 'All plants';
   String searchQuery = '';
 
-  List<ProductModel> getFilteredProducts(List<ProductModel> products) {
+  List<Product> getFilteredProducts(List<Product> products) {
     return products.where((product) {
       final matchesCategory = selectedCategory == 'All plants' ||
           product.category == selectedCategory;
@@ -26,7 +26,7 @@ class _AllProductState extends State<AllProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final products = context.watch<PlantRepository>().plantsShop;
+    final products = context.watch<PlantRepositoryImpl>().plantsShop;
     final filteredProducts = getFilteredProducts(products);
 
     return Scaffold(
@@ -113,8 +113,7 @@ class _AllProductState extends State<AllProduct> {
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
                       return ProductTile(
-                        productModel: product,
-                      );
+                          product: product); // Теперь передаём Product напрямую
                     },
                   ),
           ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lesoon1/garden_shop/data/models/product_model.dart';
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
+import 'package:lesoon1/garden_shop/domain/repository/plant_repository.dart';
 
-class PlantRepository extends ChangeNotifier {
-  final List<ProductModel> _cart = [];
-  final List<ProductModel> _plantsShop = [
+class PlantRepositoryImpl extends ChangeNotifier implements PlantRepository {
+  final List<Product> _cart = [];
+  final List<Product> _plantsShop = [
     ProductModel(
       name: 'Monstera',
       price: 68,
@@ -105,22 +107,26 @@ class PlantRepository extends ChangeNotifier {
             'The Jade Plant, or Crassula ovata, is a popular succulent known for its thick, oval leaves. Symbolizing prosperity and good luck, it thrives in bright light and requires minimal watering. This hardy plant is perfect for beginners, adding a touch of green to any space.'),
   ];
 
-  List<ProductModel> get plantsShop => _plantsShop;
-  List<ProductModel> get cart => _cart;
+  @override
+  List<Product> get plantsShop => _plantsShop;
 
-  //add item to cart
-  void addItemToCart(ProductModel item) {
+  @override
+  List<Product> get cart => _cart;
+
+  @override
+  void addItemToCart(Product item) {
     _cart.add(item);
     notifyListeners();
   }
 
-  //remove item from cart
-  void removeItemFromCart(ProductModel item) {
+  @override
+  void removeItemFromCart(Product item) {
     _cart.remove(item);
     notifyListeners();
   }
 
-  void addMultipleItemsToCart(List<ProductModel> items) {
+  @override
+  void addMultipleItemsToCart(List<Product> items) {
     _cart.addAll(items);
     notifyListeners();
   }

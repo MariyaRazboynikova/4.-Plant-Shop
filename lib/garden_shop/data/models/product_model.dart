@@ -1,15 +1,29 @@
-class ProductModel {
-  final String name;
-  final int price;
-  final String category;
-  final String imagePath;
-  final String description;
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 
-  ProductModel({
-    required this.name,
-    required this.price,
-    required this.category,
-    required this.imagePath,
-    required this.description,
+class ProductModel extends Product {
+  const ProductModel({
+    required super.name,
+    required super.price,
+    required super.category,
+    required super.imagePath,
+    required super.description,
   });
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      name: json['name'],
+      price: json['price'],
+      category: json['category'],
+      imagePath: json['imagePath'],
+      description: json['description'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'price': price,
+        'category': category,
+        'imagePath': imagePath,
+        'description': description,
+      };
 }

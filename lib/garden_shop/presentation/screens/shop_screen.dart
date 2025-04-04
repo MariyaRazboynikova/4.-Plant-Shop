@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lesoon1/garden_shop/data/models/product_model.dart';
-import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
-import 'package:lesoon1/garden_shop/presentation/components/category_tile.dart';
-import 'package:lesoon1/garden_shop/presentation/components/product_tile.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/popular_product_card.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/popular_product_card.dart';
 import 'package:provider/provider.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _ShopScreenState extends State<ShopScreen> {
   String selectedCategory = 'All plants';
   @override
   Widget build(BuildContext context) {
-    final products = context.watch<PlantRepository>().plantsShop;
+    final products = context.watch<PlantRepositoryImpl>().plantsShop;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -96,7 +96,7 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
-  Widget _buildProductList(List<ProductModel> products) {
+  Widget _buildProductList(List<Product> products) {
     final filteredProducts = selectedCategory == 'All plants'
         ? products
         : products
@@ -111,7 +111,7 @@ class _ShopScreenState extends State<ShopScreen> {
         padding: const EdgeInsets.all(5),
         itemBuilder: (context, index) {
           final product = filteredProducts[index];
-          return ProductTile(productModel: product);
+          return ProductTile(product: product);
         },
       ),
     );

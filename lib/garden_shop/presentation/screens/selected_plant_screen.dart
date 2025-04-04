@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lesoon1/garden_shop/presentation/components/button.dart';
-import 'package:lesoon1/garden_shop/data/models/product_model.dart';
+import 'package:lesoon1/garden_shop/domain/entity/product.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/button.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/info_card.dart';
 import 'package:provider/provider.dart';
-import 'package:lesoon1/garden_shop/data/repository/plant_repository.dart';
+import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 
 class SelectedPlantScreen extends StatefulWidget {
-  final ProductModel product;
+  final Product product;
 
   const SelectedPlantScreen({super.key, required this.product});
 
@@ -19,7 +20,7 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
 
   void addToCart() {
     final cartItem = List.generate(quantity, (_) => widget.product);
-    context.read<PlantRepository>().addMultipleItemsToCart(cartItem);
+    context.read<PlantRepositoryImpl>().addMultipleItemsToCart(cartItem);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -97,31 +98,6 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-
-  const InfoCard(
-      {super.key,
-      required this.icon,
-      required this.value,
-      required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 30, color: Colors.green),
-        const SizedBox(height: 5),
-        Text(value,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-      ],
     );
   }
 }
