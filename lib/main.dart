@@ -1,20 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:lesoon1/garden_shop/data/models/product_model.dart';
-import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/all_product.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/cart_screen.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/intro_screen.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/selected_plant_screen.dart';
-import 'package:lesoon1/garden_shop/presentation/screens/shop_screen.dart';
-import 'package:lesoon1/garden_shop/core/theme/theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:lesoon1/export.dart';
 
 void main() {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider<ThemesProvider>(create: (_) => ThemesProvider()),
       ChangeNotifierProvider<PlantRepositoryImpl>(
-          create: (_) => PlantRepositoryImpl()),
+          create: (_) => PlantRepositoryImpl(LocalPlantDataSource())),
     ], child: MainApp()),
   );
 }
@@ -31,7 +22,7 @@ class MainApp extends StatelessWidget {
       routes: {
         '/intro_screen': (context) => IntroScreen(),
         '/shop_screen': (context) => const ShopScreen(),
-        '/all_product': (context) => AllProduct(),
+        '/all_product': (context) => AllProductScreen(),
         '/selected_plant_screen': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as ProductModel;

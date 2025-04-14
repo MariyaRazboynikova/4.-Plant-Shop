@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lesoon1/garden_shop/data/models/cart_item.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
-import 'package:lesoon1/garden_shop/presentation/widgets/button.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/cart_item_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/cart_total_section.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
@@ -10,159 +11,128 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartItems = context.watch<PlantRepositoryImpl>().cart;
-    final totalPrice = context.watch<PlantRepositoryImpl>().totalPrice;
+    final repository = context.watch<PlantRepositoryImpl>();
+    final cartItems = repository.cart;
+    final totalPrice = repository.totalPrice;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'Card',
-            style: MyTextStyle.appBarStyle(context),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.payment),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Оплата не реализована')),
-              );
-            },
-          )
-        ],
-      ),
+      appBar: _buildAppBar(context),
       body: cartItems.isEmpty
-          ? Center(
-              child: Text(
-                'Корзина пуста',
-                style: TextStyle(fontSize: 20),
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: cartItems.length,
-                      itemBuilder: (context, index) {
-                        final item = cartItems[index];
-                        return ListTile(
-                          contentPadding: EdgeInsets.all(8.0),
-                          title: Text(
-                            item.product.name,
-                            style: MyTextStyle.normalTextStyle(context),
-                          ),
-                          subtitle: Text(
-                            '\$${item.product.price}',
-                            style: MyTextStyle.bodyStyle(context),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove),
-                                onPressed: () {
-                                  context
-                                      .read<PlantRepositoryImpl>()
-                                      .updateQuantity(
-                                          item.product, item.quantity - 1);
-                                },
-                              ),
-                              Text(
-                                item.quantity.toString(),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  context
-                                      .read<PlantRepositoryImpl>()
-                                      .updateQuantity(
-                                          item.product, item.quantity + 1);
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () async {
-                                  // Показываем диалог подтверждения
-                                  final shouldDelete = await showDialog<bool>(
-                                    context: context,
-                                    builder: (context) =>
-                                        _deleteItems(item, context),
-                                  );
-
-                                  if (shouldDelete == true) {
-                                    context
-                                        .read<PlantRepositoryImpl>()
-                                        .removeItemFromCart(item.product);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          '${item.product.name} удален из корзины',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Sum:',
-                          style: MyTextStyle.normalTextStyle(context),
-                        ),
-                        Text(
-                          ' \$${totalPrice.toStringAsFixed(2)}',
-                          style: MyTextStyle.boldTextStyle(context),
-                        ),
-                        Button(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Оформление заказа')),
-                            );
-                          },
-                          text: 'Оформить заказ',
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          ? _buildEmptyCartState()
+          : _buildCartContent(context, cartItems, totalPrice, repository),
     );
   }
 
-  AlertDialog _deleteItems(CartItem item, BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title:
+          Center(child: Text('Cart', style: MyTextStyle.appBarStyle(context))),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.payment),
+          onPressed: () => _showNotImplementedSnackBar(context),
+        )
+      ],
+    );
+  }
+
+  Widget _buildEmptyCartState() {
+    return Center(
+      child: Text('Корзина пуста', style: TextStyle(fontSize: 20)),
+    );
+  }
+
+  Widget _buildCartContent(
+    BuildContext context,
+    List<CartItem> cartItems,
+    double totalPrice,
+    PlantRepositoryImpl repository,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Expanded(child: _buildCartItemsList(context, cartItems, repository)),
+          CartTotalSection(
+            totalPrice: totalPrice,
+            onCheckout: () => _showCheckoutSnackBar(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCartItemsList(
+    BuildContext context,
+    List<CartItem> cartItems,
+    PlantRepositoryImpl repository,
+  ) {
+    return ListView.builder(
+      itemCount: cartItems.length,
+      itemBuilder: (context, index) {
+        final item = cartItems[index];
+        return CartItemTile(
+          item: item,
+          onDelete: () => _handleDeleteItem(context, item, repository),
+          onIncrease: () =>
+              repository.updateQuantity(item.product, item.quantity + 1),
+          onDecrease: () =>
+              repository.updateQuantity(item.product, item.quantity - 1),
+        );
+      },
+    );
+  }
+
+  Future<void> _handleDeleteItem(
+    BuildContext context,
+    CartItem item,
+    PlantRepositoryImpl repository,
+  ) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => _buildDeleteConfirmationDialog(context, item),
+    );
+
+    if (shouldDelete == true) {
+      repository.removeItemFromCart(item.product);
+      _showDeleteSnackBar(context, item.product.name);
+    }
+  }
+
+  AlertDialog _buildDeleteConfirmationDialog(
+      BuildContext context, CartItem item) {
     return AlertDialog(
-      title: Text("Удалить товар?"),
+      title: const Text("Удалить товар?"),
       content: Text(
           "Вы уверены, что хотите удалить ${item.product.name} из корзины?"),
       actions: [
         TextButton(
-          child: Text("Отмена"),
+          child: const Text("Отмена"),
           onPressed: () => Navigator.of(context).pop(false),
         ),
         TextButton(
-          child: Text("Удалить", style: TextStyle(color: Colors.red)),
+          child: const Text("Удалить", style: TextStyle(color: Colors.red)),
           onPressed: () => Navigator.of(context).pop(true),
         ),
       ],
+    );
+  }
+
+  void _showNotImplementedSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Оплата не реализована')),
+    );
+  }
+
+  void _showCheckoutSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Оформление заказа')),
+    );
+  }
+
+  void _showDeleteSnackBar(BuildContext context, String productName) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$productName удален из корзины')),
     );
   }
 }

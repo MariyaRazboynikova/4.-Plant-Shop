@@ -3,120 +3,128 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/jproduct_filter.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
-class AllProduct extends StatefulWidget {
+class AllProductScreen extends StatefulWidget {
+  const AllProductScreen({super.key});
+
   @override
-  State<AllProduct> createState() => _AllProductState();
+  State<AllProductScreen> createState() => _AllProductScreenState();
 }
 
-class _AllProductState extends State<AllProduct> {
-  String selectedCategory = 'All plants';
-  String searchQuery = '';
+class _AllProductScreenState extends State<AllProductScreen> {
+  final ProductFilter _filter = ProductFilter();
+  final List<String> _categories = ['All plants', 'Indoor', 'Outdoor'];
 
-  List<Product> getFilteredProducts(List<Product> products) {
-    return products.where((product) {
-      final matchesCategory = selectedCategory == 'All plants' ||
-          product.category == selectedCategory;
-      final matchesSearch = product.name.toLowerCase().contains(searchQuery);
-      return matchesCategory && matchesSearch;
-    }).toList();
+  void _handleSearchChanged(String value) {
+    setState(() => _filter.searchQuery = value.toLowerCase());
+  }
+
+  void _handleCategorySelected(String category) {
+    setState(() => _filter.selectedCategory = category);
   }
 
   @override
   Widget build(BuildContext context) {
     final products = context.watch<PlantRepositoryImpl>().plantsShop;
-    final filteredProducts = getFilteredProducts(products);
+    final filteredProducts = _filter.applyFilters(products);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Plant Catalog",
-            style: MyTextStyle.normalTextStyle(context),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/cart_screen'),
-            icon: Icon(
-              Icons.shopping_cart_outlined,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(context),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.toLowerCase();
-                });
-              },
-              decoration: const InputDecoration(
-                hintText: 'Поиск по названию растения...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.all(5),
-              children: ['All plants', 'Indoor', 'Outdoor'].map((category) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedCategory = category;
-                    });
-                  },
-                  child: CategoryTile(
-                    text: category,
-                    isSelected: selectedCategory == category,
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          Expanded(
-            child: filteredProducts.isEmpty
-                ? Center(
-                    child: Text(
-                      "Нет подходящих растений",
-                      style: GoogleFonts.taiHeritagePro(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  )
-                : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.6,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 5,
-                    ),
-                    itemCount: filteredProducts.length,
-                    padding: const EdgeInsets.all(5),
-                    itemBuilder: (context, index) {
-                      final product = filteredProducts[index];
-                      return ProductTile(
-                        product: product,
-                      );
-                    },
-                  ),
-          ),
+          _buildSearchField(),
+          _buildCategoryFilters(),
+          _buildProductGrid(filteredProducts),
         ],
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: Center(
+        child: Text(
+          "Plant Catalog",
+          style: MyTextStyle.normalTextStyle(context),
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () => Navigator.pushNamed(context, '/cart_screen'),
+          icon: Icon(
+            Icons.shopping_cart_outlined,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+      child: TextField(
+        onChanged: _handleSearchChanged,
+        decoration: const InputDecoration(
+          hintText: 'Поиск по названию растения...',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryFilters() {
+    return SizedBox(
+      height: 60,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.all(5),
+        children: _categories.map((category) {
+          return GestureDetector(
+            onTap: () => _handleCategorySelected(category),
+            child: CategoryTile(
+              text: category,
+              isSelected: _filter.selectedCategory == category,
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(List<Product> products) {
+    return Expanded(
+      child: products.isEmpty
+          ? Center(
+              child: Text(
+                "Нет подходящих растений",
+                style: GoogleFonts.taiHeritagePro(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            )
+          : GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.6,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 5,
+              ),
+              itemCount: products.length,
+              padding: const EdgeInsets.all(5),
+              itemBuilder: (context, index) {
+                return ProductTile(
+                  product: products[index],
+                );
+              },
+            ),
     );
   }
 }

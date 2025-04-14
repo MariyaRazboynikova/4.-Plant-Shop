@@ -26,8 +26,6 @@ class MyTextStyle {
     );
   }
 
- 
-
   static TextStyle boldTextStyle(BuildContext context) {
     return GoogleFonts.taiHeritagePro(
       color: Theme.of(context).colorScheme.secondary,
@@ -42,7 +40,9 @@ class MyTextStyle {
       fontSize: 20,
       fontWeight: FontWeight.w300,
     );
-  } static TextStyle bodyStyle(BuildContext context) {
+  }
+
+  static TextStyle bodyStyle(BuildContext context) {
     return GoogleFonts.taiHeritagePro(
       color: Theme.of(context).colorScheme.secondary,
       fontSize: 18,
