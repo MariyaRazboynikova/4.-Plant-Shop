@@ -13,13 +13,13 @@ class IntroScreen extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const HeaderWidget(),
+              _buildHeader(context),
               Expanded(
                 child: Stack(
                   children: [
-                    const MainShapeWidget(),
-                    const MainTextWidget(),
-                    const SeeMoreButton(),
+                    _buildMainShape(context),
+                    _buildMainText(context),
+                    _buildSeeMoreButton(context),
                   ],
                 ),
               ),
@@ -29,13 +29,8 @@ class IntroScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 40.0, right: 20),
       child: Row(
@@ -50,16 +45,11 @@ class HeaderWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class MainShapeWidget extends StatelessWidget {
-  const MainShapeWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMainShape(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double width = constraints.maxWidth * 0.8;
+        final width = constraints.maxWidth * 0.8;
         return Stack(
           children: [
             Container(
@@ -77,7 +67,9 @@ class MainShapeWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(
-                    width: 2, color: Theme.of(context).colorScheme.primary),
+                  width: 2,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(width / 2),
                   topRight: Radius.circular(width / 2),
@@ -89,13 +81,8 @@ class MainShapeWidget extends StatelessWidget {
       },
     );
   }
-}
 
-class MainTextWidget extends StatelessWidget {
-  const MainTextWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMainText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, top: 20),
       child: Text(
@@ -105,13 +92,8 @@ class MainTextWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class SeeMoreButton extends StatelessWidget {
-  const SeeMoreButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildSeeMoreButton(BuildContext context) {
     return Positioned(
       bottom: 20,
       right: 10,
@@ -119,9 +101,7 @@ class SeeMoreButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/shop_screen');
-            },
+            onTap: () => Navigator.pushNamed(context, '/shop_screen'),
             child: Text(
               'See More',
               softWrap: true,
@@ -131,7 +111,7 @@ class SeeMoreButton extends StatelessWidget {
           Icon(
             Icons.arrow_forward_outlined,
             color: Theme.of(context).colorScheme.secondary,
-          )
+          ),
         ],
       ),
     );

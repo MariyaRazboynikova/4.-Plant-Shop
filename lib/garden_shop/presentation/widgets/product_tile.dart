@@ -66,30 +66,29 @@ class ProductTile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        addItemToCart(context, 1); // Ваш существующий метод
-
-                        // Показать уведомление
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("1 товар добавлен в корзину"),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      addItemToCart(context, 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("1 товар добавлен в корзину"),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.add,
-                        color: Theme.of(context).colorScheme.surface,
-                      ),
-                    )),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                  ),
+                ),
               ],
             ),
           ],

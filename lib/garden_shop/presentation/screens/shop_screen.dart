@@ -150,10 +150,7 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _buildPopularProductSection(BuildContext context) {
-    // Получаем репозиторий
     final repository = Provider.of<PlantRepositoryImpl>(context);
-
-    // Находим продукт с ID=8
     final product = repository.plantsShop.firstWhere(
       (p) => p.id == 8,
       orElse: () => ProductModel(
@@ -189,7 +186,6 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
               ),
             ),
-            // Используем данные из ProductModel
             PopularProductCard(
               imagePath: product.imagePath,
               title: product.name,

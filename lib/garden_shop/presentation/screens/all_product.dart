@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
-import 'package:lesoon1/garden_shop/presentation/widgets/jproduct_filter.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/product_filter.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
