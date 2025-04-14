@@ -4,6 +4,7 @@ import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
 class AllProduct extends StatefulWidget {
@@ -34,16 +35,12 @@ class _AllProductState extends State<AllProduct> {
         title: Center(
           child: Text(
             "Plant Catalog",
-            style: GoogleFonts.taiHeritagePro(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 30,
-              fontWeight: FontWeight.w300,
-            ),
+            style: MyTextStyle.normalTextStyle(context),
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/cart_page'),
+            onPressed: () => Navigator.pushNamed(context, '/cart_screen'),
             icon: Icon(
               Icons.shopping_cart_outlined,
               color: Theme.of(context).colorScheme.secondary,
@@ -113,7 +110,8 @@ class _AllProductState extends State<AllProduct> {
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
                       return ProductTile(
-                          product: product); // Теперь передаём Product напрямую
+                        product: product,
+                      );
                     },
                   ),
           ),

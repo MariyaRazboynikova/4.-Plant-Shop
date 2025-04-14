@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/button.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/info_card.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 
@@ -19,8 +19,11 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
   int quantity = 1;
 
   void addToCart() {
-    final cartItem = List.generate(quantity, (_) => widget.product);
-    context.read<PlantRepositoryImpl>().addMultipleItemsToCart(cartItem);
+    final repository = context.read<PlantRepositoryImpl>();
+
+    for (int i = 0; i < quantity; i++) {
+      repository.addItemToCart(widget.product, 1);
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -32,12 +35,32 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/cart_screen'),
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.secondary,
+            size: 30,
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
             Center(
               child: Image.asset(widget.product.imagePath, height: 150),
             ),
@@ -55,11 +78,7 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
             const SizedBox(height: 20),
             Text(
               widget.product.name,
-              style: GoogleFonts.taiHeritagePro(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 30,
-                fontWeight: FontWeight.w300,
-              ),
+              style: MyTextStyle.normalTextStyle(context),
             ),
             const SizedBox(height: 10),
             Text(
@@ -67,33 +86,36 @@ class _SelectedPlantScreenState extends State<SelectedPlantScreen> {
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const Spacer(),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.remove_circle_outline),
-                  onPressed: () {
-                    if (quantity > 1) {
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      if (quantity > 1) {
+                        setState(() {
+                          quantity--;
+                        });
+                      }
+                    },
+                  ),
+                  Text('$quantity', style: const TextStyle(fontSize: 18)),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline),
+                    onPressed: () {
                       setState(() {
-                        quantity--;
+                        quantity++;
                       });
-                    }
-                  },
-                ),
-                Text('$quantity', style: const TextStyle(fontSize: 18)),
-                IconButton(
-                  icon: const Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    setState(() {
-                      quantity++;
-                    });
-                  },
-                ),
-                const Spacer(),
-                Button(
-                  text: 'Добавить в корзину',
-                  onTap: addToCart,
-                ),
-              ],
+                    },
+                  ),
+                  Button(
+                    text: 'Добавить в корзину',
+                    onTap: addToCart,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

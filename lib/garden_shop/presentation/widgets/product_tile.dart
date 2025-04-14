@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
 import 'package:lesoon1/garden_shop/presentation/screens/selected_plant_screen.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
 class ProductTile extends StatelessWidget {
@@ -43,19 +44,12 @@ class ProductTile extends StatelessWidget {
             ),
             Text(
               product.name,
-              style: GoogleFonts.taiHeritagePro(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
+              style: MyTextStyle.normalTextStyle(context),
             ),
             SizedBox(
               child: Text(
                 product.category,
-                style: GoogleFonts.taiHeritagePro(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 15,
-                ),
+                style: MyTextStyle.bodyStyle(context),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -72,18 +66,30 @@ class ProductTile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: IconButton(
-                    onPressed: () => addItemToCart(context, 1),
-                    icon: Icon(
-                      Icons.add,
-                      color: Theme.of(context).colorScheme.surface,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                ),
+                    child: IconButton(
+                      onPressed: () {
+                        addItemToCart(context, 1); // Ваш существующий метод
+
+                        // Показать уведомление
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("1 товар добавлен в корзину"),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    )),
               ],
             ),
           ],

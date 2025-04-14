@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 
 class CategoryTile extends StatelessWidget {
   final String text;
@@ -24,11 +24,7 @@ class CategoryTile extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: GoogleFonts.taiHeritagePro(
-          color: Theme.of(context).colorScheme.secondary,
-          fontSize: 20,
-          fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-        ),
+        style: MyTextStyle.bodyStyle(context),
       ),
     );
   }

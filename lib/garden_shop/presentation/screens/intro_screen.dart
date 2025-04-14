@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -45,14 +45,6 @@ class HeaderWidget extends StatelessWidget {
             Icons.emoji_nature,
             color: Theme.of(context).colorScheme.primary,
             size: 100,
-          ),
-          Text(
-            'Skeep',
-            style: GoogleFonts.taiHeritagePro(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 30,
-              fontWeight: FontWeight.w300,
-            ),
           ),
         ],
       ),
@@ -109,11 +101,7 @@ class MainTextWidget extends StatelessWidget {
       child: Text(
         'Create Your Own World',
         softWrap: true,
-        style: GoogleFonts.taiHeritagePro(
-          color: Theme.of(context).colorScheme.secondary,
-          fontSize: 100,
-          fontWeight: FontWeight.w300,
-        ),
+        style: MyTextStyle.headerStyle(context),
       ),
     );
   }
@@ -137,11 +125,7 @@ class SeeMoreButton extends StatelessWidget {
             child: Text(
               'See More',
               softWrap: true,
-              style: GoogleFonts.taiHeritagePro(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 40,
-                fontWeight: FontWeight.w300,
-              ),
+              style: MyTextStyle.subHeaderStyle(context),
             ),
           ),
           Icon(

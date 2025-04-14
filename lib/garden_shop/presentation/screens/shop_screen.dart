@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lesoon1/garden_shop/data/models/product_model.dart';
 import 'package:lesoon1/garden_shop/data/repository/plant_repository_impl.dart';
 import 'package:lesoon1/garden_shop/domain/entity/product.dart';
+import 'package:lesoon1/garden_shop/presentation/screens/selected_plant_screen.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/category_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/product_tile.dart';
 import 'package:lesoon1/garden_shop/presentation/widgets/popular_product_card.dart';
+import 'package:lesoon1/garden_shop/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -28,16 +31,12 @@ class _ShopScreenState extends State<ShopScreen> {
         title: Center(
           child: Text(
             'Plant Shop Page',
-            style: GoogleFonts.taiHeritagePro(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 30,
-              fontWeight: FontWeight.w300,
-            ),
+            style: MyTextStyle.appBarStyle(context),
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/cart_page'),
+            onPressed: () => Navigator.pushNamed(context, '/cart_screen'),
             icon: Icon(
               Icons.shopping_cart_outlined,
               color: Theme.of(context).colorScheme.secondary,
@@ -64,7 +63,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 _buildCategoryList(),
                 _buildProductList(products),
                 _buildSeeMoreButton(),
-                _buildPopularProductSection(),
+                _buildPopularProductSection(context),
               ],
             ),
           ),
@@ -141,11 +140,7 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
               Text(
                 'See More',
-                style: GoogleFonts.taiHeritagePro(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
-                ),
+                style: MyTextStyle.normalTextStyle(context),
               ),
             ],
           ),
@@ -154,9 +149,30 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
-  Widget _buildPopularProductSection() {
+  Widget _buildPopularProductSection(BuildContext context) {
+    // Получаем репозиторий
+    final repository = Provider.of<PlantRepositoryImpl>(context);
+
+    // Находим продукт с ID=8
+    final product = repository.plantsShop.firstWhere(
+      (p) => p.id == 8,
+      orElse: () => ProductModel(
+        id: -1,
+        name: 'Not Found',
+        price: 0,
+        category: '',
+        imagePath: '',
+        description: '',
+      ),
+    );
+
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/selected_plant_screen'),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectedPlantScreen(product: product),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -173,10 +189,11 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
               ),
             ),
+            // Используем данные из ProductModel
             PopularProductCard(
-              imagePath: 'lib/assets/Rubber_Tree.jpeg',
-              title: 'Rubber Tree',
-              description: 'Rubber Tree is a nice outdoor plants...',
+              imagePath: product.imagePath,
+              title: product.name,
+              description: product.description,
             ),
           ],
         ),
